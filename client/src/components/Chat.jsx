@@ -18,7 +18,8 @@ function Chat() {
 
     useEffect(() => {
         initTE({ Offcanvas, Ripple });
-    }, []);
+        console.log(messages)
+    }, [messages]);
 
     useEffect(() => {
         socket.on('connect', () => {
@@ -29,12 +30,20 @@ function Chat() {
             console.log('Disconnected from server');
         });
 
+        
+    }, []);
+
+    useEffect(() => {
         socket.on('message', (message) => {
             setMessages([...messages, message]);
         });
-    }, [messages]);
+    }, [messages])
 
-
+    const handleKeyDown = (e) => {
+        if (e.keyCode === 13) {
+            sendMessage();
+        }
+    };
 
     return (
         <>
@@ -69,26 +78,26 @@ function Chat() {
                     </button>
                 </div>
 
-                <div className="chat-box">
+                <div className='h-4/5 text-start overflow-auto'>
                     {messages.map((msg, index) => (
-                        <div key={index}>{msg.text}</div>
+                        <div className='border-2 my-4 px-3 bg-blue-600 text-white rounded-md w-64 mx-6' key={index}>{msg.text}</div>
                     ))}
                 </div>
 
-                <div className="fixed bottom-0 flex mx-8 gap-4 items-center m-6">
+                <div className="fixed bottom-0 flex mx-8 gap-4 m-6">
+
                     <input
                         className="border-none text-black px-2 w-[18rem] rounded-md"
                         type="text"
-                            value={messageText}
-                    onChange={(e) => setMessageText(e.target.value)}
+                        value={messageText}
+                        onChange={(e) => setMessageText(e.target.value)}
+                        onKeyDown={handleKeyDown}
                     />
                     <AiOutlineSend size={25}
-                    onClick={sendMessage} 
+                        onClick={sendMessage}
                     />
                 </div>
             </div>
-
-
         </>
     );
 }

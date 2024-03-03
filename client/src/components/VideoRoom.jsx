@@ -7,6 +7,8 @@ import {
   initTE,
 } from "tw-elements";
 import Chat from './Chat';
+import { useLocation } from 'react-router';
+import Footer from './Footer';
 
 const APP_ID = '2cfdbda61acd4a3dbc60b6fc5eb81fc8';
 const TOKEN =
@@ -19,11 +21,18 @@ const client = AgoraRTC.createClient({
 });
 
 export const VideoRoom = () => {
+
+  AgoraRTC.setLogLevel(4)
+  const userData = useLocation();
+
+  console.log(userData.state)
+
   const [users, setUsers] = useState([]);
   const [localTracks, setLocalTracks] = useState([]);
 
   useEffect(() => {
     initTE({ Offcanvas, Ripple });
+    console.log(users)
   })
 
   const handleUserJoined = async (user, mediaType) => {
@@ -102,20 +111,18 @@ export const VideoRoom = () => {
         </button>
 
 
-      <Chat />
+        <Chat />
 
-        <div className='grid grid-cols-3 justify-items-center text-white'>
+        <div className='flex flex-wrap gap-8 justify-center text-white'>
           {users.map((user) => (
             <div className='relative border-2 border-blue-600 my-6 px-4 py-4 rounded-3xl col-auto'>
               <VideoPlayer key={user.uid} user={user} />
-              <div className='absolute bottom-4 left-4 border-1 p-2 rounded-xl bg-gradient-to-r from-blue-600 to-purple-800'>
-                {user.uid}
-              </div>
             </div>
           ))}
         </div>
+        
+        <Footer />
       </div>
-
     </>
   );
 };
