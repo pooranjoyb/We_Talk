@@ -1,10 +1,16 @@
 import React, { useEffect, useState } from 'react';
 import AgoraRTC from 'agora-rtc-sdk-ng';
 import { VideoPlayer } from './VideoPlayer';
+import {
+  Offcanvas,
+  Ripple,
+  initTE,
+} from "tw-elements";
+import Chat from './Chat';
 
 const APP_ID = '2cfdbda61acd4a3dbc60b6fc5eb81fc8';
 const TOKEN =
-  '007eJxTYFBMWfjY705s+pWTfGZcz6+yHGlw7jrTuX4jB3/yS9aQFjkFBqPktJSklEQzw8TkFJNE45SkZDODJLO0ZNPUJAvDtGSLuNo7qQ2BjAx2HUYMjFAI4rMxlKeWJOZkMzAAAJleIIQ=';
+  '007eJxTYFj77fySD547r/UFT3p5sOLHe8PTClLzPjZ/+/9xxRWvIxx3FBiMktNSklISzQwTk1NMEo1TkpLNDJLM0pJNU5MsDNOSLVL5n6Q2BDIynHlYycjIAIEgPhtDeWpJYk42AwMAsI8nhA==';
 const CHANNEL = 'wetalk';
 
 const client = AgoraRTC.createClient({
@@ -15,6 +21,10 @@ const client = AgoraRTC.createClient({
 export const VideoRoom = () => {
   const [users, setUsers] = useState([]);
   const [localTracks, setLocalTracks] = useState([]);
+
+  useEffect(() => {
+    initTE({ Offcanvas, Ripple });
+  })
 
   const handleUserJoined = async (user, mediaType) => {
     await client.subscribe(user, mediaType);
@@ -67,24 +77,45 @@ export const VideoRoom = () => {
       }
       client.off('user-published', handleUserJoined);
       client.off('user-left', handleUserLeft);
-    //   client.unpublish(tracks).then(() => client.leave());
+      //   client.unpublish(tracks).then(() => client.leave());
     };
   }, []);
 
   return (
-    <div
-      style={{ display: 'flex', justifyContent: 'center' }}
-    >
-      <div
-        style={{
-          display: 'grid',
-          gridTemplateColumns: 'repeat(2, 200px)',
-        }}
-      >
-        {users.map((user) => (
-          <VideoPlayer key={user.uid} user={user} />
-        ))}
+    <>
+      <div className="min-h-screen bg-gray-900 py-6 justify-center sm:py-12 px-16 sm:px-20">
+        <div
+          className="bg-gradient-to-r from-blue-200 to-purple-800 bg-clip-text text-6xl font-extrabold text-transparent"
+        >
+          Talk Room
+        </div>
+
+        <button
+          className="my-4 mr-1.5 inline-block rounded bg-primary px-6 pb-2 pt-2.5 border-2 border-blue-600 text-xs font-medium uppercase leading-normal text-white shadow-[0_4px_9px_-4px_#3b71ca] transition duration-150 ease-in-out hover:bg-primary-600 hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:bg-primary-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:outline-none focus:ring-0 active:bg-primary-700 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] rounded-3xl"
+          type="button"
+          data-te-offcanvas-toggle
+          data-te-target="#offcanvasRight"
+          aria-controls="offcanvasRight"
+          data-te-ripple-init
+          data-te-ripple-color="light">
+          Open Chat
+        </button>
+
+
+      <Chat />
+
+        <div className='grid grid-cols-3 justify-items-center text-white'>
+          {users.map((user) => (
+            <div className='relative border-2 border-blue-600 my-6 px-4 py-4 rounded-3xl col-auto'>
+              <VideoPlayer key={user.uid} user={user} />
+              <div className='absolute bottom-4 left-4 border-1 p-2 rounded-xl bg-gradient-to-r from-blue-600 to-purple-800'>
+                {user.uid}
+              </div>
+            </div>
+          ))}
+        </div>
       </div>
-    </div>
+
+    </>
   );
 };

@@ -4,16 +4,16 @@ export const VideoPlayer = ({ user }) => {
   const ref = useRef();
 
   useEffect(() => {
-    user.videoTrack.play(ref.current);
+    // user.videoTrack.play(ref.current);
   }, []);
 
   return (
-    <div>
-      Uid: {user.uid}
+    <div className='rounded-3xl overflow-hidden '>
       <div
         ref={ref}
-        style={{ width: '200px', height: '200px' }}
-      ></div>
+        style={{ width: '350px', height: '350px' }}
+      >
+      </div>
     </div>
   );
 };
