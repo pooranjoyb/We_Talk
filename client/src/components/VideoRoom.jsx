@@ -7,13 +7,16 @@ import {
   initTE,
 } from "tw-elements";
 import Chat from './Chat';
-import { useLocation } from 'react-router';
+import { useNavigate, useLocation } from 'react-router';
 import Footer from './Footer';
+import io from 'socket.io-client';
 
 const APP_ID = '2cfdbda61acd4a3dbc60b6fc5eb81fc8';
 const TOKEN =
-  '007eJxTYFj77fySD547r/UFT3p5sOLHe8PTClLzPjZ/+/9xxRWvIxx3FBiMktNSklISzQwTk1NMEo1TkpLNDJLM0pJNU5MsDNOSLVL5n6Q2BDIynHlYycjIAIEgPhtDeWpJYk42AwMAsI8nhA==';
+  '007eJxTYDBMFpwy352vL26Z7xPPJHOu8zM2psYFvpBIdDH4eE/x/hkFBqPktJSklEQzw8TkFJNE45SkZDODJLO0ZNPUJAvDtGSLnOCXqQ2BjAwPFgkzMzJAIIjPxlCeWpKYk83AAABoxSDH';
 const CHANNEL = 'wetalk';
+
+const socket = io('http://localhost:5000');
 
 const client = AgoraRTC.createClient({
   mode: 'rtc',
@@ -24,15 +27,14 @@ export const VideoRoom = () => {
 
   AgoraRTC.setLogLevel(4)
   const userData = useLocation();
-
-  console.log(userData.state)
+  const navigate = useNavigate();
 
   const [users, setUsers] = useState([]);
+  const [name, setName] = useState('')
   const [localTracks, setLocalTracks] = useState([]);
 
   useEffect(() => {
     initTE({ Offcanvas, Ripple });
-    console.log(users)
   })
 
   const handleUserJoined = async (user, mediaType) => {
@@ -59,19 +61,23 @@ export const VideoRoom = () => {
 
     client
       .join(APP_ID, CHANNEL, TOKEN, null)
-      .then((uid) =>
+      .then(() =>
+        setName(userData.state.name)
+      )
+      .then((uid, name) =>
         Promise.all([
           AgoraRTC.createMicrophoneAndCameraTracks(),
-          uid,
+          uid, name,
         ])
       )
-      .then(([tracks, uid]) => {
+      .then(([tracks, uid, name]) => {
         const [audioTrack, videoTrack] = tracks;
         setLocalTracks(tracks);
         setUsers((previousUsers) => [
           ...previousUsers,
           {
             uid,
+            name,
             videoTrack,
             audioTrack,
           },
@@ -79,16 +85,39 @@ export const VideoRoom = () => {
         client.publish(tracks);
       });
 
-    return () => {
-      for (let localTrack of localTracks) {
-        localTrack.stop();
-        localTrack.close();
-      }
-      client.off('user-published', handleUserJoined);
-      client.off('user-left', handleUserLeft);
-      //   client.unpublish(tracks).then(() => client.leave());
-    };
   }, []);
+
+  const leaveMeet = async () => {
+    try {
+
+      const stream = await navigator.mediaDevices.getUserMedia({ video: true });
+      const videoTracks = stream.getVideoTracks();
+
+      if (videoTracks.length > 0) {
+        videoTracks.forEach(track => {
+          console.log('Stopping video track:', track);
+          track.stop();
+        });
+      } else {
+        console.log('No video tracks found.');
+      }
+
+      // unpublishing
+      await client.unpublish(localTracks);
+      setLocalTracks([]);
+      await client.leave();
+
+      // disconnection
+      socket.disconnect();
+      navigate('/lobby', { replace: true });
+      window.location.reload();
+      
+    } catch (error) {
+      console.error('Error leaving the meeting:', error);
+    }
+  };
+
+
 
   return (
     <>
@@ -99,17 +128,29 @@ export const VideoRoom = () => {
           Talk Room
         </div>
 
-        <button
-          className="my-4 mr-1.5 inline-block rounded bg-primary px-6 pb-2 pt-2.5 border-2 border-blue-600 text-xs font-medium uppercase leading-normal text-white shadow-[0_4px_9px_-4px_#3b71ca] transition duration-150 ease-in-out hover:bg-primary-600 hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:bg-primary-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:outline-none focus:ring-0 active:bg-primary-700 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] rounded-3xl"
-          type="button"
-          data-te-offcanvas-toggle
-          data-te-target="#offcanvasRight"
-          aria-controls="offcanvasRight"
-          data-te-ripple-init
-          data-te-ripple-color="light">
-          Open Chat
-        </button>
+        <div
+          className='flex gap-6 justify-center'>
 
+
+          <button
+            className="my-4 mr-1.5 inline-block rounded bg-primary px-6 pb-2 pt-2.5 border-2 border-blue-600 text-xs font-medium uppercase leading-normal text-white shadow-[0_4px_9px_-4px_#3b71ca] transition duration-150 ease-in-out hover:bg-primary-600 hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:bg-primary-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:outline-none focus:ring-0 active:bg-primary-700 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] rounded-3xl"
+            type="button"
+            data-te-offcanvas-toggle
+            data-te-target="#offcanvasRight"
+            aria-controls="offcanvasRight"
+            data-te-ripple-init
+            data-te-ripple-color="light">
+            Open Chat
+          </button>
+
+          <button
+            className="my-4 mr-1.5 inline-block rounded bg-primary px-6 pb-2 pt-2.5 border-2 border-blue-600 text-xs font-medium uppercase leading-normal text-white shadow-[0_4px_9px_-4px_#3b71ca] transition duration-150 ease-in-out hover:bg-primary-600 hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:bg-primary-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:outline-none focus:ring-0 active:bg-primary-700 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] rounded-3xl"
+            type="button"
+            onClick={leaveMeet}
+          >
+            Leave Meeting
+          </button>
+        </div>
 
         <Chat />
 
@@ -120,7 +161,7 @@ export const VideoRoom = () => {
             </div>
           ))}
         </div>
-        
+
         <Footer />
       </div>
     </>

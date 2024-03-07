@@ -18,7 +18,6 @@ function Chat() {
 
     useEffect(() => {
         initTE({ Offcanvas, Ripple });
-        console.log(messages)
     }, [messages]);
 
     useEffect(() => {

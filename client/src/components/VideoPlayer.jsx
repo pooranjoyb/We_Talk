@@ -14,7 +14,7 @@ export const VideoPlayer = ({ user}) => {
         style={{ width: '350px', height: '350px' }}
       >
         <div className='absolute bottom-4 left-4 border-1 p-2 rounded-xl bg-gradient-to-r from-blue-600 to-purple-800'>
-          {user.uid}
+          {user.name}
         </div>
       </div>
     </div>
