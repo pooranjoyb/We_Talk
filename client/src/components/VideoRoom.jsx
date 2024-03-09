@@ -30,7 +30,6 @@ export const VideoRoom = () => {
   const navigate = useNavigate();
 
   const [users, setUsers] = useState([]);
-  const [name, setName] = useState('')
   const [localTracks, setLocalTracks] = useState([]);
 
   useEffect(() => {

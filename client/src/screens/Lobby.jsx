@@ -7,7 +7,6 @@ const LobbyScreen = () => {
   const [usn, setUsername] = useState("");
   const [room, setRoom] = useState("");
   const [roomid, setRoomID] = useState("");
-  const [error, setError] = useState("");
   const [check, setCheck] = useState(false);
 
   const handleSubmitForm = async (e) => {
@@ -19,7 +18,7 @@ const LobbyScreen = () => {
       if (data.exists) {
         navigate('/room', { state: { name: usn, room: room } });
       } else {
-        setError("Invalid room ID");
+        alert("Invalid Room ID")
       }
     } catch (error) {
       console.error("Error checking room:", error);
@@ -30,7 +29,7 @@ const LobbyScreen = () => {
     e.preventDefault();
 
     try {
-      const response = await fetch(`/saveRoom`, {
+      await fetch(`/saveRoom`, {
         method: 'POST',
         headers: {
           'Accept': 'application/json',
@@ -38,8 +37,8 @@ const LobbyScreen = () => {
         },
         body: JSON.stringify({ id: roomid })
       });
-
-      console.log(response)
+      
+      alert(`Room Created with Room ID ${roomid}`)
 
     } catch (error) {
       console.error("Error checking room:", error);
@@ -61,10 +60,10 @@ const LobbyScreen = () => {
             className="relative px-4 py-10 bg-white shadow-lg sm:rounded-3xl sm:p-20">
             <div className="max-w-md mx-auto">
               <div>
-                <h1 className="text-2xl font-semibold">Create or Join <span className="bg-gradient-to-r from-green-700 via-blue-500 to-purple-600 bg-clip-text  font-bold text-transparent ">We-Talk</span> Room</h1>
+                <h1 className="text-2xl font-semibold"><span className="bg-gradient-to-r from-green-700 via-blue-500 to-purple-600 bg-clip-text  font-bold text-transparent ">We-Talk</span> Room</h1>
               </div>
 
-              <div className="flex items-center justify-between" >
+              <div className="flex w-[20rem] items-center justify-between" >
                 <label for="toggle" className="text-md font-bold text-gray-700 ">Create Room</label>
 
                 <div className="relative inline-block w-10 mr-2 align-middle select-none transition duration-600 ease-in mt-4 mb-2" onChange={() => setCheck(!check)}>
@@ -79,7 +78,7 @@ const LobbyScreen = () => {
                 check ? (
                   <>
                     <div className="divide-y divide-gray-200">
-                      <div className="py-8 text-base leading-6 space-y-4 text-gray-700 sm:text-lg sm:leading-7">
+                      <div className="py-1 text-base leading-6 space-y-4 text-gray-700 sm:text-lg sm:leading-7">
                         <div className="relative">
                           <input
                             type="text"

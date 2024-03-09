@@ -5,6 +5,8 @@ const cors = require('cors');
 const bp = require("body-parser");
 
 const app = express();
+const PORT = process.env.PORT || 5000;
+
 app.use(cors());
 app.use(bp.json());
 app.use(bp.urlencoded({extended: false}))
@@ -32,10 +34,9 @@ io.on('connection', (socket) => {
 });
 
 app.post('/saveRoom', (req, res) => {
-  console.log(req.body)
   const { id } = req.body;
   rooms.add(id);
-  res.send({ message: 'Room ID saved successfully' });
+  res.send({ res: true });
 });
 
 app.get('/checkRoom/:roomID', (req, res) => {
@@ -47,11 +48,6 @@ app.get('/checkRoom/:roomID', (req, res) => {
   }
 });
 
-app.get('/' , (req, res) => {
-  console.log("Server Running Smoothly")
-})
-
-const PORT = process.env.PORT || 5000;
 
 server.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
