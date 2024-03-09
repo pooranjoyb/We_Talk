@@ -13,7 +13,7 @@ import io from 'socket.io-client';
 
 const APP_ID = '2cfdbda61acd4a3dbc60b6fc5eb81fc8';
 const TOKEN =
-  '007eJxTYDBMFpwy352vL26Z7xPPJHOu8zM2psYFvpBIdDH4eE/x/hkFBqPktJSklEQzw8TkFJNE45SkZDODJLO0ZNPUJAvDtGSLnOCXqQ2BjAwPFgkzMzJAIIjPxlCeWpKYk83AAABoxSDH';
+  '007eJxTYDiw4seFgxM6zk7jveJmctRU9uyHg7XNdfHbVpm/s4mO3CemwGCUnJaSlJJoZpiYnGKSaJySlGxmkGSWlmyammRhmJZs4dbyJrUhkJFhgY0xCyMDBIL4bAzlqSWJOdkMDACORSNa';
 const CHANNEL = 'wetalk';
 
 const socket = io('http://localhost:5000');
@@ -61,23 +61,19 @@ export const VideoRoom = () => {
 
     client
       .join(APP_ID, CHANNEL, TOKEN, null)
-      .then(() =>
-        setName(userData.state.name)
-      )
-      .then((uid, name) =>
+      .then((uid) =>
         Promise.all([
           AgoraRTC.createMicrophoneAndCameraTracks(),
-          uid, name,
+          uid,
         ])
       )
-      .then(([tracks, uid, name]) => {
+      .then(([tracks, uid]) => {
         const [audioTrack, videoTrack] = tracks;
         setLocalTracks(tracks);
         setUsers((previousUsers) => [
           ...previousUsers,
           {
             uid,
-            name,
             videoTrack,
             audioTrack,
           },
