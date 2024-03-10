@@ -32,7 +32,10 @@ export const VideoRoom = () => {
   const [users, setUsers] = useState([]);
   const [localTracks, setLocalTracks] = useState([]);
 
+  const name = userData.state.name;
+
   useEffect(() => {
+    console.log(name)
     initTE({ Offcanvas, Ripple });
   })
 
@@ -147,7 +150,7 @@ export const VideoRoom = () => {
           </button>
         </div>
 
-        <Chat />
+        <Chat name={name}/>
 
         <div className='flex flex-wrap gap-8 justify-center text-white'>
           {users.map((user) => (

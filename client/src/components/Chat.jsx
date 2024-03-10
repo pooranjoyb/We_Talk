@@ -5,13 +5,13 @@ import io from 'socket.io-client';
 
 const socket = io('http://localhost:5000');
 
-function Chat() {
+function Chat({ name }) {
 
     const [messages, setMessages] = useState([]);
     const [messageText, setMessageText] = useState('');
 
     const sendMessage = () => {
-        socket.emit('message', { text: messageText });
+        socket.emit('message', { text: messageText, user: name });
         console.log("Message sent sucess")
         setMessageText('');
     };
@@ -29,7 +29,7 @@ function Chat() {
             console.log('Disconnected from server');
         });
 
-        
+
     }, []);
 
     useEffect(() => {
@@ -79,7 +79,10 @@ function Chat() {
 
                 <div className='h-4/5 text-start overflow-auto'>
                     {messages.map((msg, index) => (
-                        <div className='border-2 my-4 px-3 bg-blue-600 text-white rounded-md w-64 mx-6' key={index}>{msg.text}</div>
+                        <div className='relative border-2 my-8 px-3 bg-blue-600 text-white rounded-md w-64 mx-6' key={index}>
+                            <div className=''>{msg.text}</div>
+                            <div className='absolute bottom-7 left-0'>{msg.user}</div>
+                        </div>
                     ))}
                 </div>
 
