@@ -3,6 +3,7 @@ const http = require('http');
 const socketIo = require('socket.io');
 const cors = require('cors');
 const bp = require("body-parser");
+const Connection = require('./utils/db.js')
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -51,4 +52,5 @@ app.get('/checkRoom/:roomID', (req, res) => {
 
 server.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
+  Connection();
 });
