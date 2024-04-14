@@ -12,7 +12,7 @@ const LobbyScreen = () => {
   const handleSubmitForm = async (e) => {
     e.preventDefault();
     try {
-      const response = await fetch(`/checkRoom/${room}`);
+      const response = await fetch(`/checkRoom/${room}/${usn}`);
       const data = await response.json();
 
       if (data.exists) {
@@ -29,7 +29,7 @@ const LobbyScreen = () => {
     e.preventDefault();
 
     try {
-      await fetch(`/saveRoom`, {
+      const res = await fetch(`/saveRoom`, {
         method: 'POST',
         headers: {
           'Accept': 'application/json',
@@ -37,11 +37,14 @@ const LobbyScreen = () => {
         },
         body: JSON.stringify({ id: roomid })
       });
-      
-      alert(`Room Created with Room ID ${roomid}`)
-
+      const data = await res.json();
+      console.log(data)
+      if(data.res)
+        alert(`Room Created with Room ID ${roomid}`)
+      else 
+        alert(`Room with Room ID ${roomid} already exists!`)
     } catch (error) {
-      console.error("Error checking room:", error);
+      console.error("Error creating room", error);
     }
   }
 

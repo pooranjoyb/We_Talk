@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 
 const Connection = () => {
-    const MONGODB_URI = 'mongodb://localhost:27017'
+    const MONGODB_URI = 'mongodb://localhost:27017/wetalk'
 
     mongoose.set('strictQuery', false);
     mongoose.connect(MONGODB_URI);

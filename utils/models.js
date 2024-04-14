@@ -1,10 +1,22 @@
 const mongoose = require('mongoose');
-const { Schema } = mongoose;
 
-const chatSchema = new Schema({
-    users: [String],
-    chats: [String]
+const userActivity = new mongoose.Schema({
+    username: String,
+    roomJoined: String,
 });
-const chat = mongoose.model('chat', chatSchema)
 
-exports.chat = chat;
+const roomSchema = new mongoose.Schema({
+    roomId: String
+})
+
+const chatSchema = new mongoose.Schema({
+    user: String,
+    msg: [String],
+});
+
+const UserActivity = mongoose.model('user', userActivity);
+const Room = mongoose.model('room', roomSchema)
+const Chat = mongoose.model('chat', chatSchema)
+
+
+module.exports = { UserActivity, Room, Chat };
