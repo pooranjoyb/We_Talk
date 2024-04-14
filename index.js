@@ -21,37 +21,36 @@ const io = socketIo(server, {
   }
 });
 
-io.on('connection', async (socket) => {
+io.on('connection',  (socket) => {
   console.log('A user connected');
 
-  socket.on('message', (msg) => {
+  socket.on('message', async (msg) => {
     console.log('Message received:', msg);
 
-    io.emit('message', msg);
 
     try {
-      Chat.exists({ user: msg?.user })
-        .then(exists => {
-          if (exists) {
-            Chat.updateOne(
-              { $push: { msg: msg.text } }
-            );
+      const chatExists = await Chat.exists({ user: msg?.user });
+      if (chatExists) {
+        const updatedChat = await Chat.updateOne(
+          { user: msg?.user },
+          { $push: { msg: msg?.text } }
+        );
 
-            console.log('Executing')
-          } else {
-            const newChat = new Chat({
-              user: msg?.user,
-              msg: msg?.text
-            })
-
-            newChat.save();
-          }
-        }).catch(error => {
-          console.error('Error checking chat existence:', error);
+        console.log("Old chat updated", updatedChat);
+      } else {
+        const newChat = new Chat({
+          user: msg?.user,
+          msg: [msg?.text]
         });
 
-    } catch (err) {
+        await newChat.save();
+        console.log("New chat saved");
+      }
 
+      io.emit('message', msg);
+    } catch (error) {
+      console.error('Error handling message:', error);
+      socket.emit('error', { message: 'Failed to process message' });
     }
 
   });
