@@ -13,7 +13,7 @@ import io from 'socket.io-client';
 
 const APP_ID = '2cfdbda61acd4a3dbc60b6fc5eb81fc8';
 const TOKEN =
-  '007eJxTYDiw4seFgxM6zk7jveJmctRU9uyHg7XNdfHbVpm/s4mO3CemwGCUnJaSlJJoZpiYnGKSaJySlGxmkGSWlmyammRhmJZs4dbyJrUhkJFhgY0xCyMDBIL4bAzlqSWJOdkMDACORSNa';
+  '007eJxTYNi7UeLk6wlPm/ZeE9b/4DR3z6VfnPE3t4ixa63/yb/8H4++AoNRclpKUkqimWFicopJonFKUrKZQZJZWrJpapKFYVqyxRkpmbSGQEaGX7MWsDAyQCCIz8ZQnlqSmJPNwAAAeOUjeg==';
 const CHANNEL = 'wetalk';
 
 const socket = io('http://localhost:5000');
