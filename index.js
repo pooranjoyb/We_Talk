@@ -63,8 +63,6 @@ io.on('connection',  (socket) => {
 app.post('/saveRoom', (req, res) => {
   const { id } = req.body;
 
-  console.log(id)
-
   Room.exists({ roomId: id })
     .then(exists => {
       if (exists) {
@@ -96,8 +94,7 @@ app.get('/checkRoom/:roomID/:usn', (req, res) => {
         })
 
         userActivity.save();
-        console.log('saved')
-
+        
         res.send({ exists: true });
       } else {
         res.send({ exists: false });

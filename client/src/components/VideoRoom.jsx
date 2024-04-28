@@ -11,12 +11,12 @@ import { useNavigate, useLocation } from 'react-router';
 import Footer from './Footer';
 import io from 'socket.io-client';
 
-const APP_ID = '2cfdbda61acd4a3dbc60b6fc5eb81fc8';
-const TOKEN =
-  '007eJxTYNjLL7LjomDfV+GIxj1Vxmeat63e593j8nFH0aaQT5mzGWYpMBglp6UkpSSaGSYmp5gkGqckJZsZJJmlJZumJlkYpiVbVIrKpDUEMjLcd5FlYIRCEJ+NoTy1JDEnm4EBAP7fIYY=';
+const APP_ID = process.env.REACT_APP_AGORA_APP_ID;
+const TOKEN = process.env.REACT_APP_AGORA_TOKEN;
+const socket = io(process.env.REACT_APP_API_URL);
 const CHANNEL = 'wetalk';
 
-const socket = io('http://localhost:5000');
+console.log(TOKEN)
 
 const client = AgoraRTC.createClient({
   mode: 'rtc',
@@ -35,7 +35,6 @@ export const VideoRoom = () => {
   const name = userData.state.name;
 
   useEffect(() => {
-    console.log(name)
     initTE({ Offcanvas, Ripple });
   })
 
