@@ -16,8 +16,6 @@ const TOKEN = process.env.REACT_APP_AGORA_TOKEN;
 const socket = io(process.env.REACT_APP_API_URL);
 const CHANNEL = 'wetalk';
 
-console.log(TOKEN)
-
 const client = AgoraRTC.createClient({
   mode: 'rtc',
   codec: 'vp8',
@@ -46,7 +44,7 @@ export const VideoRoom = () => {
     }
 
     if (mediaType === 'audio') {
-      // user.audioTrack.play()
+      user.audioTrack.play()
     }
   };
 

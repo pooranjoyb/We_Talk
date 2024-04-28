@@ -9,7 +9,7 @@ function Footer() {
                     <p> Stay fit. All day, every day. </p>
                 </div>
                 <div className="text-center w-full mt-12 text-sm text-gray-400">
-                    <p className="order-2 md:order-1 mt-8 md:mt-0"> &copy; Akshaya Mudireddy 2024 - BTech Major-Project</p>
+                    <p className="order-2 md:order-1 mt-8 md:mt-0"> &copy; Copyright 2024 - Pooranjoy Bhattacharya</p>
                 </div>
             </div>
         </footer>
