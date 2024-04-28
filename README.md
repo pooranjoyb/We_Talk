@@ -30,23 +30,23 @@ WeTalk is a web-based video conferencing application that facilitates seamless r
 ```
 - Setup MongoDB collection in your local machine
   - Enter MongoDB shell
-    ```bash
-      mongosh 
-    ```
+   ```bash
+    mongosh 
+   ```
   - Create a database called `wetalk`
-    
-    ```bash
-      use wetalk
-    ```
-  - Create the following collections
-    
-    ```bash
-    db.createCollection("users")
-    db.createCollection("rooms")
-    db.createCollection("chats")
-    ```
-- Create an Agora Account and add the Agora SDK `AppId` & `TOKEN`.  Remmeber to keep the `channel name` as `wetalk` while creating the project.
    
+   ```bash
+    use wetalk
+   ```
+  - Create the following collections
+   
+   ```bash
+   db.createCollection("users")
+   db.createCollection("rooms")
+   db.createCollection("chats")
+   ```
+- Create an Agora Account and add the Agora SDK `AppId` & `TOKEN`.  Remmeber to keep the `channel name` as `wetalk` while creating the project.
+  
   ```bash
   cd client
   nano .env
@@ -71,6 +71,14 @@ WeTalk is a web-based video conferencing application that facilitates seamless r
   cd utils && nano db.js
   const MONGODB_URI = 'mongodb://127.0.0.1:27017/wetalk'
 ```
+
+### Screenshots
+
+<img  src="https://github.com/pooranjoyb/We_Talk/assets/90945182/2ebd9c91-3dfe-475e-8494-1571c5cfd3f5" />
+
+<img  src="https://github.com/pooranjoyb/We_Talk/assets/90945182/c0180bb2-e488-4460-a643-03d54a1c705f" />
+
+<img  src="https://github.com/pooranjoyb/We_Talk/assets/90945182/b9978234-de8e-4928-9eae-d9272ceafc10" />
 
 ## License
 
